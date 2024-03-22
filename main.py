@@ -1,24 +1,37 @@
 from Entity.Graph import Graph
-from Entity.Node import Node
 from Entity.Tree import Tree
 
 if __name__ == '__main__':
-    graph_main = Graph()
+    # Example usage:
+    graph = Graph()
 
-    node_a = Node("A")
-    node_b = Node("B")
-    node_c = Node("C")
-    node_d = Node("D")
-    node_e = Node("E")
+    # Add nodes
+    node_a = graph.add_node('A')
+    node_b = graph.add_node('B')
+    node_c = graph.add_node('C')
+    node_d = graph.add_node('D')
+    node_e = graph.add_node('E')
 
-    graph_main.add_edge(node_a, node_b, 5)
-    graph_main.add_edge(node_a, node_c, 3)
-    graph_main.add_edge(node_c, node_d, 2)
-    graph_main.add_edge(node_b, node_d, 1)
-    graph_main.add_edge(node_d, node_e, 2)
+    # Add edges
+    graph.add_edge('A', 'B', 3)
+    graph.add_edge('A', 'C', 5)
 
-    graph_main.print_graph()
+    graph.add_edge('B', 'C', 8)
+    graph.add_edge('B', 'D', 1)
+    graph.add_edge('B', 'A', 1)
 
-    print("\n")
-    tree = Tree(origin=node_a, graph=graph_main)
-    tree.load_tree_from_graph_and_node()
+    graph.add_edge('C', 'B', 3)
+    graph.add_edge('C', 'D', 3)
+    graph.add_edge('C', 'A', 3)
+
+    graph.add_edge('D', 'B', 2)
+    graph.add_edge('D', 'C', 2)
+    graph.add_edge('D', 'E', 2)
+
+    graph.display()
+
+    tree = Tree(node_a, graph)
+
+    tree.load_tree()
+
+    tree.display_2()
