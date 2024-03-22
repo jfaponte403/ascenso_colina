@@ -1,4 +1,5 @@
-from typing import Optional
+from queue import PriorityQueue
+from typing import Optional, List
 
 from Entity.Edge import Edge
 from Entity.Node import Node
@@ -30,8 +31,61 @@ class Graph:
         return None
 
     def display(self):
+        print("\n")
+        print("GRAPH")
         for node in self.nodes:
             print("Node:", node.value)
             print("Edges:")
             for edge in node.edges:
                 print(edge.node_origin.value, "<-- ", edge.weight, " -->", edge.node_destination.value)
+        print("\n")
+
+    def hill_climb(self, start_value: str, goal_value: str) -> List[str]:
+        start_node = self.find_node(start_value)
+        goal_node = self.find_node(goal_value)
+
+        if not start_node or not goal_node:
+            print("Start or goal node not found.")
+            return []
+
+        # Priority queue to prioritize nodes with lower heuristic values
+        frontier = PriorityQueue()
+        frontier.put((0, [start_node.value]))  # (heuristic value, [path])
+        explored = set()  # Set to store explored nodes
+
+        while not frontier.empty():
+            current_cost, current_path = frontier.get()
+            current_node = self.find_node(current_path[-1])
+
+            if current_node.value == goal_node.value:
+                return current_path  # Return the path if the goal node is reached
+
+            if current_node.value not in explored:
+                explored.add(current_node.value)
+                # Calculate heuristic (in this case, we assume a simple heuristic of 1)
+                heuristic = 1
+
+                # Expand to neighboring nodes
+                for edge in current_node.edges:
+                    neighbor_node = edge.node_destination if edge.node_origin.value == current_node.value else edge.node_origin
+                    neighbor_cost = current_cost + edge.weight
+                    neighbor_path = current_path + [neighbor_node.value]
+                    frontier.put((neighbor_cost + heuristic, neighbor_path))  # Add to frontier with priority
+
+        print("Goal not reachable.")
+        return []
+
+    @staticmethod
+    def print_path(path: list) -> None:
+        print("\n[Hill Climbing]")
+        if not path:
+            print("Path is empty")
+            return
+
+        print("Path:", end=" ")
+        for idx, item in enumerate(path):
+            if idx == len(path) - 1:  # Last item in path
+                print(item, end="")  # Print without arrow
+            else:
+                print(item, "->", end=" ")  # Print with arrow
+        print()  # Add a new line after printing the path

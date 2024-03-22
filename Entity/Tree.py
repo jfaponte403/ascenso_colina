@@ -17,27 +17,10 @@ class Tree:
         edge = TreeEdge(origin, destination, weight)
         origin.add_child(edge)
 
-    # def load_tree(self):
-    #     def dfs(current_node, parent_tree_node):
-    #         visited.add(current_node.value)
-    #         graph_node = self.graph.find_node(current_node.value)
-    #         for neighbor_edge in graph_node.edges:
-    #             neighbor_node = neighbor_edge.node_destination
-    #             if neighbor_node.value not in visited:
-    #                 # Procesar el nodo vecino y realizar la llamada recursiva DFS
-    #                 child_tree_node = TreeNode.create_tree_node_from_graph_node(neighbor_node)
-    #                 self.add_edge(parent_tree_node, child_tree_node, neighbor_edge.weight)
-    #                 print("root:", parent_tree_node.value, "child:", child_tree_node.value, "weight:",
-    #                       neighbor_edge.weight)
-    #                 dfs(neighbor_node, child_tree_node)
-    #
-    #     visited = set()  # Conjunto para almacenar los nodos visitados
-    #     dfs(self.node_root, self.tree_root)
-
     def load_tree(self):
-        visited = set()  # Conjunto para almacenar los nodos visitados
+        visited = set()
         q = Queue()
-        q.put((self.node_root, self.tree_root))  # Iniciar con el nodo raíz y su correspondiente nodo en el árbol
+        q.put((self.node_root, self.tree_root))
 
         while not q.empty():
             current_node, parent_tree_node = q.get()
@@ -45,35 +28,11 @@ class Tree:
             graph_node = self.graph.find_node(current_node.value)
             for neighbor_edge in graph_node.edges:
                 neighbor_node = neighbor_edge.node_destination
-                # Procesar el nodo vecino si no ha sido visitado
                 if neighbor_node.value not in visited:
                     child_tree_node = TreeNode.create_tree_node_from_graph_node(neighbor_node)
                     self.add_edge(parent_tree_node, child_tree_node, neighbor_edge.weight)
-                    print("root:", parent_tree_node.value, "child:", child_tree_node.value, "weight:",
-                          neighbor_edge.weight)
-                    # Agregar el nodo vecino a la cola para ser procesado
+
                     q.put((neighbor_node, child_tree_node))
-
-
-    # def load_tree(self):
-    #     visited = set()  # Conjunto para almacenar los nodos visitados
-    #     q = Queue()
-    #     q.put((self.node_root, self.tree_root))  # Iniciar con el nodo raíz y su correspondiente nodo en el árbol
-    #
-    #     while not q.empty():
-    #         current_node, parent_tree_node = q.get()
-    #         visited.add(current_node.value)
-    #         graph_node = self.graph.find_node(current_node.value)
-    #         for neighbor_edge in graph_node.edges:
-    #             neighbor_node = neighbor_edge.node_destination
-    #             if neighbor_node.value not in visited:
-    #                 # Solo procesar el nodo si no ha sido visitado antes
-    #                 child_tree_node = TreeNode.create_tree_node_from_graph_node(neighbor_node)
-    #                 self.add_edge(parent_tree_node, child_tree_node, neighbor_edge.weight)
-    #                 print("root:", parent_tree_node.value, "child:", child_tree_node.value, "weight:",
-    #                       neighbor_edge.weight)
-    #                 # Agregar el nodo vecino a la cola para ser procesado
-    #                 q.put((neighbor_node, child_tree_node))
 
     def display_tree(self, node: TreeNode, level=0):
         print("  " * level + node.value)
