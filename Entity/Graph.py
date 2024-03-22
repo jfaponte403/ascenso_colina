@@ -41,37 +41,54 @@ class Graph:
         print("\n")
 
     def hill_climb(self, start_value: str, goal_value: str) -> List[str]:
+        # Buscar el nodo de inicio y el nodo objetivo en el grafo
         start_node = self.find_node(start_value)
         goal_node = self.find_node(goal_value)
 
+        # Comprobar si el nodo de inicio y el nodo objetivo existen en el grafo
         if not start_node or not goal_node:
             print("Start or goal node not found.")
             return []
 
-        # Priority queue to prioritize nodes with lower heuristic values
+        # Inicializar la cola de prioridad para almacenar nodos que se van a explorar
         frontier = PriorityQueue()
-        frontier.put((0, [start_node.value]))  # (heuristic value, [path])
-        explored = set()  # Set to store explored nodes
+        # Agregar el nodo de inicio con costo 0 a la cola de prioridad, con el camino formado solo por el nodo de inicio
+        frontier.put((0, [start_node.value]))
+        # Inicializar un conjunto para almacenar nodos explorados
+        explored = set()
 
+        # Mientras haya nodos en la cola de prioridad
         while not frontier.empty():
+            # Extraer el nodo actual y su costo asociado de la cola de prioridad
             current_cost, current_path = frontier.get()
+            # Encontrar el nodo actual en el grafo
             current_node = self.find_node(current_path[-1])
 
+            # Comprobar si el nodo actual es el nodo objetivo
             if current_node.value == goal_node.value:
-                return current_path  # Return the path if the goal node is reached
+                # Devolver el camino actual si se alcanza el nodo objetivo
+                return current_path
 
+                # Si el nodo actual no ha sido explorado
             if current_node.value not in explored:
+                # Marcar el nodo actual como explorado
                 explored.add(current_node.value)
-                # Calculate heuristic (in this case, we assume a simple heuristic of 1)
+
+                # Definir la heurística (en este caso, 1)
                 heuristic = 1
 
-                # Expand to neighboring nodes
+                # Expandir a los nodos vecinos del nodo actual
                 for edge in current_node.edges:
+                    # Determinar el nodo vecino basado en la arista y el nodo actual
                     neighbor_node = edge.node_destination if edge.node_origin.value == current_node.value else edge.node_origin
+                    # Calcular el costo hasta el nodo vecino
                     neighbor_cost = current_cost + edge.weight
+                    # Formar el nuevo camino agregando el nodo vecino al camino actual
                     neighbor_path = current_path + [neighbor_node.value]
-                    frontier.put((neighbor_cost + heuristic, neighbor_path))  # Add to frontier with priority
+                    # Agregar el nodo vecino a la cola de prioridad con el costo estimado total
+                    frontier.put((neighbor_cost + heuristic, neighbor_path))
 
+                    # Si no se encuentra ningún camino al nodo objetivo
         print("Goal not reachable.")
         return []
 
